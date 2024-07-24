@@ -84,10 +84,13 @@ fi
 
 # Print Service Account details
 SERVICE_ACCOUNT_ID=$(gcloud iam service-accounts describe "${SERVICE_ACCOUNT_EMAIL}" --format='get(uniqueId)')
-echo -e "=-=-=-=-=-=-=- Service Account email -=-=-=-=-=-=-=-"
+echo -e "============================================"
+echo -e "=========== Copy Detail below on your private note"
+echo -e "=-=-=-=-=-=-=- Service Account email "
 echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_EMAIL}${RESET}"
-echo -e "=-=-=-=-=-=-=- Service Account Unique ID -=-=-=-=-=-=-=-"
+echo -e "=-=-=-=-=-=-=- Service Account Unique ID "
 echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_ID}${RESET}"
+echo -e "============================================"
 
 # Construct URL for manual key creation
 KEY_CREATION_URL="https://console.cloud.google.com/iam-admin/serviceaccounts/details/${SERVICE_ACCOUNT_ID}/keys?project=${PROJECT_ID}"
