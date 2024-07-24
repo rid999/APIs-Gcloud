@@ -15,7 +15,7 @@ if [ -z "$PROJECTS" ]; then
 fi
 
 # Display projects and prompt user to select one
-echo -e "${LIME_GREEN}Available projects:${RESET}"
+echo -e "${LIME_GREEN}Select your Project:${RESET}"
 select PROJECT_ID in $PROJECTS; do
   if [ -n "$PROJECT_ID" ]; then
     echo -e "${LIME_GREEN}You selected project: $PROJECT_ID${RESET}"
