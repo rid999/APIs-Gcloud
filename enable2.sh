@@ -50,13 +50,6 @@ gcloud iam service-accounts keys create "${SERVICE_ACCOUNT_NAME}.p12" \
     --iam-account="${SERVICE_ACCOUNT_EMAIL}" \
     --key-file-type="p12"
 
-# Print Service Account details
-SERVICE_ACCOUNT_ID=$(gcloud iam service-accounts describe "${SERVICE_ACCOUNT_EMAIL}" --format='get(uniqueId)')
-echo -e "=-=-=-=-=-=-=- Service Account email -=-=-=-=-=-=-=-"
-echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_EMAIL}${RESET}"
-echo -e "=-=-=-=-=-=-=- Service Account Unique ID -=-=-=-=-=-=-=-"
-echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_ID}${RESET}"
-
 # List of APIs to enable
 APIS=(
   "admin.googleapis.com"
@@ -94,3 +87,10 @@ if [ $COUNT -eq $TOTAL_APIS ]; then
 else
   echo -e "\e[31mSome APIs may not have been enabled successfully.${RESET}"
 fi
+
+# Print Service Account details
+SERVICE_ACCOUNT_ID=$(gcloud iam service-accounts describe "${SERVICE_ACCOUNT_EMAIL}" --format='get(uniqueId)')
+echo -e "=-=-=-=-=-=-=- Service Account email -=-=-=-=-=-=-=-"
+echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_EMAIL}${RESET}"
+echo -e "=-=-=-=-=-=-=- Service Account Unique ID -=-=-=-=-=-=-=-"
+echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_ID}${RESET}"
