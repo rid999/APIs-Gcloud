@@ -29,7 +29,7 @@ APIS=(
   "admin.googleapis.com"
   "drive.googleapis.com"
   "gmail.googleapis.com"
-  "calendar.googleapis.com"
+  "calendar-json.googleapis.com"
   "people.googleapis.com"
   "tasks.googleapis.com"
   "forms.googleapis.com"
