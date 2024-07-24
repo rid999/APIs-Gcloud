@@ -89,7 +89,7 @@ echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_EMAIL}${RESET}"
 echo -e "=-=-=-=-=-=-=- Service Account Unique ID -=-=-=-=-=-=-=-"
 echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_ID}${RESET}"
 
-# Print instructions for creating and downloading the P12 key manually
-KEY_CREATION_URL="https://console.cloud.google.com/iam-admin/serviceaccounts/create?project=${PROJECT_ID}"
+# Construct URL for manual key creation
+KEY_CREATION_URL="https://console.cloud.google.com/iam-admin/serviceaccounts/details/${SERVICE_ACCOUNT_ID}/keys?project=${PROJECT_ID}"
 echo -e "${LIME_GREEN}Please manually create and download the P12 key from the following URL:${RESET}"
 echo -e "${KEY_CREATION_URL}"
