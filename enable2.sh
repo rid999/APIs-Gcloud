@@ -44,12 +44,6 @@ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
     --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
     --role="roles/owner"
 
-# Create P12 Key
-echo -e "${LIME_GREEN}Creating P12 key for the service account...${RESET}"
-gcloud iam service-accounts keys create "${SERVICE_ACCOUNT_NAME}.p12" \
-    --iam-account="${SERVICE_ACCOUNT_EMAIL}" \
-    --key-file-type="p12"
-
 # List of APIs to enable
 APIS=(
   "admin.googleapis.com"
@@ -94,3 +88,8 @@ echo -e "=-=-=-=-=-=-=- Service Account email -=-=-=-=-=-=-=-"
 echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_EMAIL}${RESET}"
 echo -e "=-=-=-=-=-=-=- Service Account Unique ID -=-=-=-=-=-=-=-"
 echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_ID}${RESET}"
+
+# Print instructions for creating and downloading the P12 key manually
+KEY_CREATION_URL="https://console.cloud.google.com/iam-admin/serviceaccounts/create?project=${PROJECT_ID}"
+echo -e "${LIME_GREEN}Please manually create and download the P12 key from the following URL:${RESET}"
+echo -e "${KEY_CREATION_URL}"
