@@ -52,8 +52,10 @@ gcloud iam service-accounts keys create "${SERVICE_ACCOUNT_NAME}.p12" \
 
 # Print Service Account details
 SERVICE_ACCOUNT_ID=$(gcloud iam service-accounts describe "${SERVICE_ACCOUNT_EMAIL}" --format='get(uniqueId)')
-echo -e "${LIME_GREEN}Service Account Email: ${SERVICE_ACCOUNT_EMAIL}${RESET}"
-echo -e "${LIME_GREEN}Service Account Unique ID: ${SERVICE_ACCOUNT_ID}${RESET}"
+echo -e "=-=-=-=-=-=-=- Service Account email -=-=-=-=-=-=-=-"
+echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_EMAIL}${RESET}"
+echo -e "=-=-=-=-=-=-=- Service Account Unique ID -=-=-=-=-=-=-=-"
+echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_ID}${RESET}"
 
 # List of APIs to enable
 APIS=(
