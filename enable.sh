@@ -38,10 +38,26 @@ APIS=(
   "storage.googleapis.com"
 )
 
+# Total number of APIs
+TOTAL_APIS=${#APIS[@]}
+
+# Counter for progress
+COUNT=0
+
 # Enable each API
 for API in "${APIS[@]}"; do
-  echo "Enabling $API..."
-  gcloud services enable $API
+  COUNT=$((COUNT + 1))
+  echo -n "Enabling $API [${COUNT}/${TOTAL_APIS}]..."
+  if gcloud services enable $API; then
+    echo -e "\e[32m Done\e[0m"  # Green color for success
+  else
+    echo -e "\e[31m Failed\e[0m"  # Red color for failure
+  fi
 done
 
-echo "All specified APIs have been enabled for project $PROJECT_ID."
+# Final status
+if [ $COUNT -eq $TOTAL_APIS ]; then
+  echo -e "\e[32mAll specified APIs have been successfully enabled for project $PROJECT_ID: ${COUNT}/${TOTAL_APIS}.\e[0m"
+else
+  echo "Some APIs may not have been enabled successfully."
+fi
