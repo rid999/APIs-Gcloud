@@ -9,7 +9,7 @@ RESET='\e[0m'
 echo -e "${MAGENTA}Welcome to the Google Cloud Service Account Creator!${RESET}"
 
 # Prompt user to choose between using the current project or creating a new one
-echo -e "${LIME_GREEN}Do you want to use the current project or create a new one?${RESET}"
+echo -e "${LIME_GREEN}Do you want to use the current project or create a new one? (type number and press Enter)${RESET}"
 echo -e "1. Use current project"
 echo -e "2. Create new project"
 read -r CHOICE
