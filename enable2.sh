@@ -82,7 +82,7 @@ APIS=(
   "sheets.googleapis.com"  # Google Sheets API
   "docs.googleapis.com"  # Google Docs API
   "groupssettings.googleapis.com"  # Groups Settings API
-  "workspace.googleapis.com"  # Google Workspace Migrate API
+  "migrate.googleapis.com"  # Google Workspace Migrate API
 )
 
 # Total number of APIs
