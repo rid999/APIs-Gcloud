@@ -4,25 +4,23 @@
 LIME_GREEN='\e[38;2;84;255;130m'
 RESET='\e[0m'
 
-# List available Google Cloud projects
-echo -e "${LIME_GREEN}Fetching list of available projects...${RESET}"
-PROJECTS=$(gcloud projects list --format="value(projectId)")
+# Prompt user to choose between using the current project or creating a new one
+echo -e "${LIME_GREEN}Do you want to use the current project or create a new one?${RESET}"
+echo -e "1. Use current project"
+echo -e "2. Create new project"
+read -r CHOICE
 
-# Check if any projects are available
-if [ -z "$PROJECTS" ]; then
-  echo -e "${LIME_GREEN}No projects found. Would you like to create a new project? (y/n)${RESET}"
-  read -r CREATE_NEW_PROJECT
-  if [[ "$CREATE_NEW_PROJECT" =~ ^[Yy]$ ]]; then
-    echo -e "${LIME_GREEN}Please enter the new project ID:${RESET}"
-    read -r NEW_PROJECT_ID
-    echo -e "${LIME_GREEN}Creating new project: $NEW_PROJECT_ID...${RESET}"
-    gcloud projects create "$NEW_PROJECT_ID"
-    PROJECT_ID="$NEW_PROJECT_ID"
-  else
-    echo -e "${LIME_GREEN}Exiting script. No project selected.${RESET}"
+if [[ "$CHOICE" == "1" ]]; then
+  # List available Google Cloud projects
+  echo -e "${LIME_GREEN}Fetching list of available projects...${RESET}"
+  PROJECTS=$(gcloud projects list --format="value(projectId)")
+
+  # Check if any projects are available
+  if [ -z "$PROJECTS" ]; then
+    echo -e "${LIME_GREEN}No projects found. Exiting script.${RESET}"
     exit 1
   fi
-else
+
   # Display projects and prompt user to select one
   echo -e "${LIME_GREEN}Select your Project:${RESET}"
   select PROJECT_ID in $PROJECTS; do
@@ -33,6 +31,17 @@ else
       echo -e "${LIME_GREEN}Invalid selection. Please select a valid project ID.${RESET}"
     fi
   done
+
+elif [[ "$CHOICE" == "2" ]]; then
+  # Create a new project
+  echo -e "${LIME_GREEN}Please enter the new project ID:${RESET}"
+  read -r NEW_PROJECT_ID
+  echo -e "${LIME_GREEN}Creating new project: $NEW_PROJECT_ID...${RESET}"
+  gcloud projects create "$NEW_PROJECT_ID"
+  PROJECT_ID="$NEW_PROJECT_ID"
+else
+  echo -e "${LIME_GREEN}Invalid choice. Exiting script.${RESET}"
+  exit 1
 fi
 
 # Set the project as the active project
@@ -56,20 +65,20 @@ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
 
 # List of APIs to enable
 APIS=(
-"admin.googleapis.com"  # Admin SDK API
-"drive.googleapis.com"  # Google Drive API
-"gmail.googleapis.com"  # Gmail API
-"calendar-json.googleapis.com"  # Google Calendar API
-"people.googleapis.com"  # People API
-"tasks.googleapis.com"  # Tasks API
-"forms.googleapis.com"  # Google Forms API
-"groupsmigration.googleapis.com"  # Groups Migration API
-"vault.googleapis.com"  # Google Vault API
-"storage.googleapis.com"  # Cloud Storage API
-"sheets.googleapis.com"  # Google Sheets API
-"docs.googleapis.com"  # Google Docs API
-"groupssettings.googleapis.com"  # Groups Settings API
-"workspace.googleapis.com"  # Google Workspace Migrate API
+  "admin.googleapis.com"  # Admin SDK API
+  "drive.googleapis.com"  # Google Drive API
+  "gmail.googleapis.com"  # Gmail API
+  "calendar-json.googleapis.com"  # Google Calendar API
+  "people.googleapis.com"  # People API
+  "tasks.googleapis.com"  # Tasks API
+  "forms.googleapis.com"  # Google Forms API
+  "groupsmigration.googleapis.com"  # Groups Migration API
+  "vault.googleapis.com"  # Google Vault API
+  "storage.googleapis.com"  # Cloud Storage API
+  "sheets.googleapis.com"  # Google Sheets API
+  "docs.googleapis.com"  # Google Docs API
+  "groupssettings.googleapis.com"  # Groups Settings API
+  "workspace.googleapis.com"  # Google Workspace Migrate API
 )
 
 # Total number of APIs
