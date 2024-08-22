@@ -10,23 +10,33 @@ PROJECTS=$(gcloud projects list --format="value(projectId)")
 
 # Check if any projects are available
 if [ -z "$PROJECTS" ]; then
-  echo -e "${LIME_GREEN}No projects found. Please make sure you have access to at least one Google Cloud project.${RESET}"
-  exit 1
+  echo -e "${LIME_GREEN}No projects found. Would you like to create a new project? (y/n)${RESET}"
+  read -r CREATE_NEW_PROJECT
+  if [[ "$CREATE_NEW_PROJECT" =~ ^[Yy]$ ]]; then
+    echo -e "${LIME_GREEN}Please enter the new project ID:${RESET}"
+    read -r NEW_PROJECT_ID
+    echo -e "${LIME_GREEN}Creating new project: $NEW_PROJECT_ID...${RESET}"
+    gcloud projects create "$NEW_PROJECT_ID"
+    PROJECT_ID="$NEW_PROJECT_ID"
+  else
+    echo -e "${LIME_GREEN}Exiting script. No project selected.${RESET}"
+    exit 1
+  fi
+else
+  # Display projects and prompt user to select one
+  echo -e "${LIME_GREEN}Select your Project:${RESET}"
+  select PROJECT_ID in $PROJECTS; do
+    if [ -n "$PROJECT_ID" ]; then
+      echo -e "${LIME_GREEN}You selected project: $PROJECT_ID${RESET}"
+      break
+    else
+      echo -e "${LIME_GREEN}Invalid selection. Please select a valid project ID.${RESET}"
+    fi
+  done
 fi
 
-# Display projects and prompt user to select one
-echo -e "${LIME_GREEN}Select your Project:${RESET}"
-select PROJECT_ID in $PROJECTS; do
-  if [ -n "$PROJECT_ID" ]; then
-    echo -e "${LIME_GREEN}You selected project: $PROJECT_ID${RESET}"
-    break
-  else
-    echo -e "${LIME_GREEN}Invalid selection. Please select a valid project ID.${RESET}"
-  fi
-done
-
 # Set the project as the active project
-gcloud config set project $PROJECT_ID
+gcloud config set project "$PROJECT_ID"
 
 # Generate a random name for the service account
 SERVICE_ACCOUNT_NAME="service-account-$(date +%s)"  # Unique name using timestamp
@@ -46,16 +56,20 @@ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
 
 # List of APIs to enable
 APIS=(
-  "admin.googleapis.com"
-  "drive.googleapis.com"
-  "gmail.googleapis.com"
-  "calendar-json.googleapis.com"
-  "people.googleapis.com"
-  "tasks.googleapis.com"
-  "forms.googleapis.com"
-  "groupsmigration.googleapis.com"
-  "vault.googleapis.com"
-  "storage.googleapis.com"
+"admin.googleapis.com"  # Admin SDK API
+"drive.googleapis.com"  # Google Drive API
+"gmail.googleapis.com"  # Gmail API
+"calendar-json.googleapis.com"  # Google Calendar API
+"people.googleapis.com"  # People API
+"tasks.googleapis.com"  # Tasks API
+"forms.googleapis.com"  # Google Forms API
+"groupsmigration.googleapis.com"  # Groups Migration API
+"vault.googleapis.com"  # Google Vault API
+"storage.googleapis.com"  # Cloud Storage API
+"sheets.googleapis.com"  # Google Sheets API
+"docs.googleapis.com"  # Google Docs API
+"groupssettings.googleapis.com"  # Groups Settings API
+"workspace.googleapis.com"  # Google Workspace Migrate API
 )
 
 # Total number of APIs
@@ -68,7 +82,7 @@ COUNT=0
 for API in "${APIS[@]}"; do
   COUNT=$((COUNT + 1))
   echo -n -e "Enabling $API [${COUNT}/${TOTAL_APIS}]..."
-  if gcloud services enable $API; then
+  if gcloud services enable "$API"; then
     echo -e "${LIME_GREEN} Done${RESET}"  # Lime green color for success
   else
     echo -e "\e[31m Failed${RESET}"  # Red color for failure
@@ -84,13 +98,13 @@ fi
 
 # Print Service Account details
 SERVICE_ACCOUNT_ID=$(gcloud iam service-accounts describe "${SERVICE_ACCOUNT_EMAIL}" --format='get(uniqueId)')
-echo -e "============================================"
+echo -e "====================================================="
 echo -e ">>  Copy Detail below on your private note"
 echo -e ">>  Service Account email "
 echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_EMAIL}${RESET}"
 echo -e ">>  Service Account Unique ID "
 echo -e "${LIME_GREEN}${SERVICE_ACCOUNT_ID}${RESET}"
-echo -e "============================================"
+echo -e "====================================================="
 
 # Construct URL for manual key creation
 KEY_CREATION_URL="https://console.cloud.google.com/iam-admin/serviceaccounts/details/${SERVICE_ACCOUNT_ID}/keys?project=${PROJECT_ID}"
